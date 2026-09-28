@@ -1,5 +1,16 @@
 # Validação do projeto — fases 2 a 15
 
+## Atualização de 28/09/2026
+
+- Posts, eventos e atividades agora criam notificações automáticas ao serem
+  publicados. Conteúdo interno envia somente para a audiência do ministério.
+- Repetir a mesma transição não duplica avisos; rotas levam ao conteúdo ou à agenda.
+- API: **449 testes / 3.532 assertions aprovados** em PostgreSQL isolado.
+- Web: typecheck e build Vite aprovados. Mobile: typecheck, dependências Expo e
+  Expo Doctor (20/20) aprovados.
+- Produção local atualizada; health e ready locais e públicos respondem JSON com
+  HTTP 200. Build Android atual registrado no histórico de builds do EAS.
+
 ## Atualização de 24/09/2026
 
 - Projeto EAS `@gui-tupinamba/ieqcv-app` e Firebase `ieqcv-app-5d0e0425`

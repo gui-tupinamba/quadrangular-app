@@ -1,7 +1,7 @@
 # Plano incremental de implementação
 
-A execução atual implementou as fases 2–13, incluindo API, Web, domínio externo e
-aplicativo mobile. A próxima fase é notificações. As decisões em
+A execução atual implementou as fases 2–15, incluindo API, Web, aplicativo mobile,
+notificações e domínio externo. As decisões em
 [architecture.md](architecture.md) guiam todas as fases; resultados executados em
 [validation.md](validation.md).
 
@@ -21,7 +21,7 @@ aplicativo mobile. A próxima fase é notificações. As decisões em
 | 9–11 — Conteúdo e agenda | Implementadas: comentários, eventos, atividades e agenda protegida. |
 | 12 — Web | Implementada e disponível em `https://guitupinamba.dev`. |
 | 13 — Mobile | Implementada em Expo/React Native; bundles Android/iOS validados. |
-| 14 — Notificações | Próxima fase. |
+| 14 — Notificações | Implementada: caixa de entrada Web/mobile, preferências, dispositivos, fila Expo e avisos automáticos de conteúdo publicado. |
 | 15 — Exposição externa | Implementada com Cloudflare Tunnel e hosts Web/API separados. |
 
 Um arquivo ou comando documentado não é evidência de execução. Os resultados históricos das fases 2–4 e a suíte completa da fase 5 estão no registro de validação, que distingue testes em PostgreSQL isolado de implantação no banco local. As fases seguintes mantêm seus critérios próprios de aceite.

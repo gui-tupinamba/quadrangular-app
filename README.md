@@ -72,7 +72,9 @@ dados reais da API. [Execução e arquivos](docs/web.md). Sem nova migration.
 Fase 13: aplicativo Expo/React Native com login, restauração segura de sessão, Home,
 feed, detalhes e comentários, eventos, agenda, ministérios e perfil. Refresh token
 fica no SecureStore e o access token somente em memória. [Execução](docs/mobile.md).
-Próxima fase: notificações.
+Fase 14: notificações na Web e no mobile, preferências, registro de dispositivos,
+fila Expo e avisos automáticos ao publicar posts, eventos e atividades.
+[Configuração](docs/notifications.md).
 
 Leia [a arquitetura e o modelo inicial](docs/architecture.md),
 [o plano com critérios de aceite](docs/implementation-plan.md) e
@@ -368,6 +370,6 @@ Web (fase 12): [instruções](docs/web.md). Mobile (fase 13):
 [instruções](docs/mobile.md). A exposição externa está ativa por Cloudflare Tunnel
 nos hosts `guitupinamba.dev` e `api.guitupinamba.dev`, com HTTPS e origens restritas.
 
-API atualizada em 22/09/2026; **448 testes e 3.515 verificações** aprovados na suíte
+API atualizada em 28/09/2026; **449 testes e 3.532 verificações** aprovados na suíte
 completa com PostgreSQL isolado. A migration mais recente é
-`Version20260922120000`.
+`Version20260925190000`.
