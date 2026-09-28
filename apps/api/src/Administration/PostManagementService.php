@@ -6,6 +6,7 @@ namespace App\Administration;
 
 use App\Enum\PostStatus;
 use App\Http\PostInput;
+use App\Notification\ContentNotificationService;
 use App\Security\AuthenticatedActor;
 use App\Security\Authorization\AccessPolicy;
 use DateTimeImmutable;
@@ -17,8 +18,11 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 final readonly class PostManagementService
 {
-    public function __construct(private Connection $db, private AccessPolicy $policy)
-    {
+    public function __construct(
+        private Connection $db,
+        private AccessPolicy $policy,
+        private ContentNotificationService $contentNotifications,
+    ) {
     }
 
     public function create(AuthenticatedActor $actor, array $data): array
@@ -96,10 +100,52 @@ final readonly class PostManagementService
             }
 
             if ($post['status'] !== $status->value) {
-                $changes = ['status' => $status->value, 'updated_at' => $now];
-                if ($status === PostStatus::PUBLISHED && $post['published_at'] === null) { $changes['published_at'] = $now; }
-                $this->db->update('posts', $changes, ['id' => $id]);
-                $this->audit($actor->userId, $id, 'post.status_changed', ['before' => $post['status'], 'after' => $status->value], $now);
+                $changes = [
+                    'status' => $status->value,
+                    'updated_at' => $now,
+                ];
+
+                if (
+                    $status === PostStatus::PUBLISHED
+                    && $post['published_at'] === null
+                ) {
+                    $changes['published_at'] = $now;
+                }
+
+                $this->db->update(
+                    'posts',
+                    $changes,
+                    [
+                        'id' => $id,
+                    ],
+                );
+
+                $this->audit(
+                    $actor->userId,
+                    $id,
+                    'post.status_changed',
+                    [
+                        'before' => $post['status'],
+                        'after' => $status->value,
+                    ],
+                    $now,
+                );
+
+                if ($status === PostStatus::PUBLISHED) {
+                    $publishedPost =
+                        $this->db->fetchAssociative(
+                            'SELECT * FROM posts WHERE id = ?',
+                            [$id],
+                        );
+
+                    if ($publishedPost !== false) {
+                        $this->contentNotifications->postPublished(
+                            $actor,
+                            $publishedPost,
+                            $now,
+                        );
+                    }
+                }
             }
             return $this->db->fetchAssociative('SELECT * FROM posts WHERE id = ?', [$id]);
         });

@@ -35,6 +35,7 @@ final class EventManagementHttpTest extends WebTestCase
     {
         if ($this->db?->isTransactionActive()) { $this->db->rollBack(); }
         foreach ($this->users as $id) {
+            $this->db->delete('notifications', ['created_by_id' => $id]);
             $this->db->delete('audit_logs', ['actor_id' => $id]);
             $this->db->executeStatement('DELETE FROM refresh_tokens WHERE session_id IN (SELECT id FROM auth_sessions WHERE user_id = ?)', [$id]);
             $this->db->delete('auth_sessions', ['user_id' => $id]);
@@ -79,7 +80,9 @@ final class EventManagementHttpTest extends WebTestCase
         $admin = $this->account('ADMIN'); $leader = $this->account('LEADER');
         $first = $this->ministry(); $second = $this->ministry(); $third = $this->ministry();
         $this->join($leader, $first, true); $this->join($leader, $second, true);
-        $id = $this->event($leader, ['ministry_id' => $first, 'visibility' => 'MINISTRY_MEMBERS'], true);
+        $id = $this->event($leader, ['ministry_id' => $first, 'visibility' => 'MINISTRY_MEMBERS']);
+        $this->request('POST', "/api/events/$id/publish", $admin, []);
+        self::assertResponseIsSuccessful();
         $this->request('PATCH', "/api/events/$id", $leader, ['ministry_id' => $third]);
         self::assertResponseStatusCodeSame(403);
         $this->request('PATCH', "/api/events/$id", $leader, ['ministry_id' => null, 'visibility' => 'PUBLIC']);
@@ -114,7 +117,9 @@ final class EventManagementHttpTest extends WebTestCase
     public function testMembershipRevocationImmediatelyRemovesReadAndWriteWithExistingJwt(): void
     {
         $admin = $this->account('ADMIN'); $leader = $this->account('LEADER'); $ministry = $this->ministry(); $this->join($leader, $ministry, true);
-        $id = $this->event($leader, ['ministry_id' => $ministry, 'visibility' => 'MINISTRY_MEMBERS'], true);
+        $id = $this->event($leader, ['ministry_id' => $ministry, 'visibility' => 'MINISTRY_MEMBERS']);
+        $this->request('POST', "/api/events/$id/publish", $admin, []);
+        self::assertResponseIsSuccessful();
         $this->request('DELETE', "/api/ministries/$ministry/members/".$leader['id'], $admin);
         self::assertResponseStatusCodeSame(204);
         foreach ([['GET', "/api/events/$id", null], ['GET', "/api/admin/events/$id", null], ['PATCH', "/api/events/$id", ['title' => 'Revoked']], ['POST', "/api/events/$id/unpublish", []]] as [$method, $path, $data]) {
@@ -156,13 +161,14 @@ final class EventManagementHttpTest extends WebTestCase
         $this->request('POST', "/api/events/$id/cancel", $admin, []); self::assertResponseStatusCodeSame(409);
         $this->request('GET', "/api/events/$id", $member); self::assertResponseStatusCodeSame(404);
         $this->request('POST', "/api/events/$id/publish", $admin, []); self::assertSame('PUBLISHED', $this->body()['event']['status']);
+        self::assertSame('/events/'.$id, $this->db->fetchOne('SELECT route FROM notifications WHERE created_by_id = ? ORDER BY id DESC LIMIT 1', [$admin['id']]));
         $this->request('POST', "/api/events/$id/cancel", $admin, []); self::assertSame('CANCELLED', $this->body()['event']['status']);
         $this->request('GET', '/api/events?status=CANCELLED', $member); self::assertSame([$id], array_column($this->body()['items'], 'id'));
         $this->request('DELETE', "/api/events/$id", $admin); self::assertResponseStatusCodeSame(204);
         $this->request('POST', "/api/events/$id/cancel", $admin, []); self::assertResponseStatusCodeSame(409);
         $this->request('GET', "/api/events/$id", $member); self::assertResponseStatusCodeSame(404);
         $this->request('GET', '/api/admin/events?status=ARCHIVED', $admin); self::assertSame([$id], array_column($this->body()['items'], 'id'));
-        $this->request('POST', "/api/events/$id/publish", $admin, []); self::assertResponseIsSuccessful();
+        $this->request('POST', "/api/events/$id/publish", $admin, []); self::assertResponseStatusCodeSame(409);
         $this->request('POST', "/api/events/$id/unpublish", $admin, []); self::assertSame('DRAFT', $this->body()['event']['status']);
     }
 

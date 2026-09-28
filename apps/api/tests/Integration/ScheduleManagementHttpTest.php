@@ -34,6 +34,7 @@ final class ScheduleManagementHttpTest extends WebTestCase
     {
         if ($this->db?->isTransactionActive()) { $this->db->rollBack(); }
         foreach ($this->users as $id) {
+            $this->db->delete('notifications', ['created_by_id' => $id]);
             $this->db->delete('audit_logs', ['actor_id' => $id]);
             $this->db->executeStatement('DELETE FROM refresh_tokens WHERE session_id IN (SELECT id FROM auth_sessions WHERE user_id = ?)', [$id]);
             $this->db->delete('auth_sessions', ['user_id' => $id]);
@@ -79,7 +80,9 @@ final class ScheduleManagementHttpTest extends WebTestCase
         $admin = $this->account('ADMIN'); $leader = $this->account('LEADER');
         $first = $this->ministry(); $second = $this->ministry(); $third = $this->ministry();
         $this->join($leader, $first, true); $this->join($leader, $second, true);
-        $id = $this->schedule($leader, ['ministry_id' => $first, 'visibility' => 'MINISTRY_MEMBERS'], true);
+        $id = $this->schedule($leader, ['ministry_id' => $first, 'visibility' => 'MINISTRY_MEMBERS']);
+        $this->request('POST', "/api/schedules/$id/publish", $admin, []);
+        self::assertResponseIsSuccessful();
         $this->request('PATCH', "/api/schedules/$id", $leader, ['ministry_id' => $third]);
         self::assertResponseStatusCodeSame(403);
         $this->request('PATCH', "/api/schedules/$id", $leader, ['ministry_id' => null, 'visibility' => 'PUBLIC']);
@@ -114,7 +117,9 @@ final class ScheduleManagementHttpTest extends WebTestCase
     public function testMembershipRevocationImmediatelyRemovesReadAndWriteWithExistingJwt(): void
     {
         $admin = $this->account('ADMIN'); $leader = $this->account('LEADER'); $ministry = $this->ministry(); $this->join($leader, $ministry, true);
-        $id = $this->schedule($leader, ['ministry_id' => $ministry, 'visibility' => 'MINISTRY_MEMBERS'], true);
+        $id = $this->schedule($leader, ['ministry_id' => $ministry, 'visibility' => 'MINISTRY_MEMBERS']);
+        $this->request('POST', "/api/schedules/$id/publish", $admin, []);
+        self::assertResponseIsSuccessful();
         $this->request('DELETE', "/api/ministries/$ministry/members/".$leader['id'], $admin);
         self::assertResponseStatusCodeSame(204);
         foreach ([['GET', "/api/schedules/$id", null], ['GET', "/api/admin/schedules/$id", null], ['PATCH', "/api/schedules/$id", ['title' => 'Revoked']], ['POST', "/api/schedules/$id/unpublish", []]] as [$method, $path, $data]) {
@@ -156,13 +161,14 @@ final class ScheduleManagementHttpTest extends WebTestCase
         $this->request('POST', "/api/schedules/$id/cancel", $admin, []); self::assertResponseStatusCodeSame(409);
         $this->request('GET', "/api/schedules/$id", $member); self::assertResponseStatusCodeSame(404);
         $this->request('POST', "/api/schedules/$id/publish", $admin, []); self::assertSame('PUBLISHED', $this->body()['schedule']['status']);
+        self::assertSame('/agenda', $this->db->fetchOne('SELECT route FROM notifications WHERE created_by_id = ? ORDER BY id DESC LIMIT 1', [$admin['id']]));
         $this->request('POST', "/api/schedules/$id/cancel", $admin, []); self::assertSame('CANCELLED', $this->body()['schedule']['status']);
         $this->request('GET', '/api/schedules?status=CANCELLED', $member); self::assertSame([$id], array_column($this->body()['items'], 'id'));
         $this->request('DELETE', "/api/schedules/$id", $admin); self::assertResponseStatusCodeSame(204);
         $this->request('POST', "/api/schedules/$id/cancel", $admin, []); self::assertResponseStatusCodeSame(409);
         $this->request('GET', "/api/schedules/$id", $member); self::assertResponseStatusCodeSame(404);
         $this->request('GET', '/api/admin/schedules?status=ARCHIVED', $admin); self::assertSame([$id], array_column($this->body()['items'], 'id'));
-        $this->request('POST', "/api/schedules/$id/publish", $admin, []); self::assertResponseIsSuccessful();
+        $this->request('POST', "/api/schedules/$id/publish", $admin, []); self::assertResponseStatusCodeSame(409);
         $this->request('POST', "/api/schedules/$id/unpublish", $admin, []); self::assertSame('DRAFT', $this->body()['schedule']['status']);
     }
 

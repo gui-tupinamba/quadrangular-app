@@ -389,24 +389,6 @@ export default function NotificationsScreen() {
             }
           />
         </View>
-
-        {canSend ? (
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Criar novo aviso"
-            onPress={() => {
-              setSendSuccess("");
-              setComposerOpen(true);
-            }}
-            style={({ pressed }) => [
-              styles.addButton,
-
-              pressed && styles.pressed,
-            ]}
-          >
-            <Ionicons name="add" size={27} color={colors.white} />
-          </Pressable>
-        ) : null}
       </View>
 
       {error ? <ErrorState error={error} retry={load} /> : null}
@@ -842,16 +824,6 @@ const styles = StyleSheet.create({
 
   headingGrow: {
     flex: 1,
-  },
-
-  addButton: {
-    width: 46,
-    height: 46,
-    borderRadius: 23,
-    backgroundColor: colors.green,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 4,
   },
 
   newNoticeButton: {

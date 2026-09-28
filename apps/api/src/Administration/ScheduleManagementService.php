@@ -6,6 +6,7 @@ namespace App\Administration;
 
 use App\Enum\ScheduleStatus;
 use App\Http\ScheduleInput;
+use App\Notification\ContentNotificationService;
 use App\Security\AuthenticatedActor;
 use App\Security\Authorization\AccessPolicy;
 use DateTimeImmutable;
@@ -17,8 +18,11 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 final readonly class ScheduleManagementService
 {
-    public function __construct(private Connection $db, private AccessPolicy $policy)
-    {
+    public function __construct(
+        private Connection $db,
+        private AccessPolicy $policy,
+        private ContentNotificationService $contentNotifications,
+    ) {
     }
 
     public function create(AuthenticatedActor $actor, array $data): array
@@ -207,6 +211,22 @@ final readonly class ScheduleManagementService
                     ],
                     $now,
                 );
+
+                if ($status === ScheduleStatus::PUBLISHED) {
+                    $publishedSchedule =
+                        $this->db->fetchAssociative(
+                            'SELECT * FROM ministry_schedules WHERE id = ?',
+                            [$id],
+                        );
+
+                    if ($publishedSchedule !== false) {
+                        $this->contentNotifications->schedulePublished(
+                            $actor,
+                            $publishedSchedule,
+                            $now,
+                        );
+                    }
+                }
             }
 
             return $this->db

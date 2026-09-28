@@ -35,6 +35,7 @@ final class CommentManagementHttpTest extends WebTestCase
         if ($this->db?->isTransactionActive()) { $this->db->rollBack(); }
         foreach ($this->users as $id) { $this->db->delete('comments', ['user_id' => $id]); }
         foreach ($this->users as $id) {
+            $this->db->delete('notifications', ['created_by_id' => $id]);
             $this->db->delete('audit_logs', ['actor_id' => $id]);
             $this->db->executeStatement('DELETE FROM refresh_tokens WHERE session_id IN (SELECT id FROM auth_sessions WHERE user_id = ?)', [$id]);
             $this->db->delete('auth_sessions', ['user_id' => $id]);

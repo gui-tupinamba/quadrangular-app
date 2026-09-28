@@ -6,6 +6,7 @@ namespace App\Administration;
 
 use App\Enum\EventStatus;
 use App\Http\EventInput;
+use App\Notification\ContentNotificationService;
 use App\Security\AuthenticatedActor;
 use App\Security\Authorization\AccessPolicy;
 use DateTimeImmutable;
@@ -17,8 +18,11 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 final readonly class EventManagementService
 {
-    public function __construct(private Connection $db, private AccessPolicy $policy)
-    {
+    public function __construct(
+        private Connection $db,
+        private AccessPolicy $policy,
+        private ContentNotificationService $contentNotifications,
+    ) {
     }
 
     public function create(AuthenticatedActor $actor, array $data): array
@@ -214,6 +218,22 @@ public function transition(
                     ],
                     $now,
                 );
+
+                if ($status === EventStatus::PUBLISHED) {
+                    $publishedEvent =
+                        $this->db->fetchAssociative(
+                            'SELECT * FROM events WHERE id = ?',
+                            [$id],
+                        );
+
+                    if ($publishedEvent !== false) {
+                        $this->contentNotifications->eventPublished(
+                            $actor,
+                            $publishedEvent,
+                            $now,
+                        );
+                    }
+                }
             }
 
             return $this->db

@@ -34,7 +34,6 @@ async function configureAndroidNotificationChannel() {
     description: "Notificações da Comunidade",
     importance: Notifications.AndroidImportance.MAX,
     vibrationPattern: [0, 250, 250, 250],
-    sound: "default",
   });
 }
 

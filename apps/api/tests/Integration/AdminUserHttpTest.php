@@ -44,6 +44,9 @@ final class AdminUserHttpTest extends WebTestCase
         if ($this->db?->isTransactionActive()) {
             $this->db->rollBack();
         }
+        foreach ($this->users as $id) {
+            $this->db->delete('notifications', ['created_by_id' => $id]);
+        }
         foreach ($this->posts as $id) {
             $this->db->delete('comments', ['post_id' => $id]);
             $this->db->delete('posts', ['id' => $id]);

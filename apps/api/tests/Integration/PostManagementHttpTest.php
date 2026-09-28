@@ -35,6 +35,7 @@ final class PostManagementHttpTest extends WebTestCase
     {
         if ($this->db?->isTransactionActive()) { $this->db->rollBack(); }
         foreach ($this->users as $id) {
+            $this->db->delete('notifications', ['created_by_id' => $id]);
             $this->db->delete('audit_logs', ['actor_id' => $id]);
             $this->db->executeStatement('DELETE FROM refresh_tokens WHERE session_id IN (SELECT id FROM auth_sessions WHERE user_id = ?)', [$id]);
             $this->db->delete('auth_sessions', ['user_id' => $id]);
@@ -78,6 +79,52 @@ final class PostManagementHttpTest extends WebTestCase
         $this->request('POST', "/api/posts/$id/publish", $admin, []);
         self::assertResponseIsSuccessful();
         self::assertSame($count, (int) $this->db->fetchOne('SELECT count(*) FROM audit_logs'));
+    }
+
+    public function testPublishingPrivatePostNotifiesOnlyItsMinistryAudience(): void
+    {
+        $admin = $this->account('ADMIN');
+        $member = $this->account('MEMBER');
+        $outsider = $this->account('MEMBER');
+        $ministry = $this->ministry();
+        $this->join($member, $ministry);
+
+        $id = $this->post($admin, [
+            'ministry_id' => $ministry,
+            'visibility' => 'MINISTRY_MEMBERS',
+            'title' => 'Encontro do ministério',
+        ]);
+        $this->request('POST', "/api/posts/$id/publish", $admin, []);
+        self::assertResponseIsSuccessful();
+
+        $notification = $this->db->fetchAssociative(
+            'SELECT id, scope, ministry_id, route, title, body FROM notifications WHERE created_by_id = ? ORDER BY id DESC LIMIT 1',
+            [$admin['id']],
+        );
+        self::assertIsArray($notification);
+        self::assertSame('MINISTRY', $notification['scope']);
+        self::assertSame($ministry, (int) $notification['ministry_id']);
+        self::assertSame("/posts/$id", $notification['route']);
+        self::assertSame('Nova publicação', $notification['title']);
+        self::assertSame('Encontro do ministério', $notification['body']);
+
+        $recipients = array_map(
+            'intval',
+            $this->db->fetchFirstColumn(
+                'SELECT user_id FROM notification_recipients WHERE notification_id = ? ORDER BY user_id',
+                [(int) $notification['id']],
+            ),
+        );
+        self::assertContains($admin['id'], $recipients);
+        self::assertContains($member['id'], $recipients);
+        self::assertNotContains($outsider['id'], $recipients);
+
+        $this->request('POST', "/api/posts/$id/publish", $admin, []);
+        self::assertResponseIsSuccessful();
+        self::assertSame(1, (int) $this->db->fetchOne(
+            'SELECT count(*) FROM notifications WHERE created_by_id = ? AND route = ?',
+            [$admin['id'], "/posts/$id"],
+        ));
     }
 
     public function testFeedSearchAndFiltersDoNotRevealOtherMinistriesPrivatePosts(): void
