@@ -33,6 +33,8 @@ backups/
 artifacts/
 *.dump
 *.sql.gz
+*.rar
+apps/mobile/android/app/igreja-release.keystore
 
 # Local tools and OS files
 .idea/
