@@ -4,9 +4,14 @@ import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "@/theme";
 
+export const unstable_settings = {
+  initialRouteName: "(tabs)",
+};
+
 export default function AppLayout() {
   return (
     <Stack
+      initialRouteName="(tabs)"
       screenOptions={{
         headerStyle: {
           backgroundColor: colors.cream,

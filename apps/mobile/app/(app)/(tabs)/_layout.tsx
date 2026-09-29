@@ -4,12 +4,19 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { colors } from "@/theme";
 
+export const unstable_settings = {
+  initialRouteName: "index",
+};
+
 export default function TabsLayout() {
   const insets = useSafeAreaInsets();
 
   return (
     <Tabs
+      initialRouteName="index"
       screenOptions={{
+        headerShown: false,
+
         headerStyle: {
           backgroundColor: colors.cream,
         },
