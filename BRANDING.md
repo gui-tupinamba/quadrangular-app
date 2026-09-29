@@ -46,10 +46,10 @@ Mantenha os nomes dos arquivos dentro de `assets/`:
 
 | Arquivo | Uso |
 | --- | --- |
-| `logo.jpg` | Logo principal e tela de login |
+| `logo.jpg` | Logo principal para outras áreas da interface |
 | `logo-horizontal.jpg` | Cabeçalhos e áreas horizontais |
 | `logo-white.jpg` | Fundos escuros |
-| `app-icon.png` | Ícone principal do aplicativo, PNG quadrado |
+| `app-icon.png` | Ícone da gaveta do celular e logo da tela de login, PNG quadrado |
 | `adaptive-icon.png` | Foreground adaptativo Android, PNG transparente |
 | `splash.png` | Imagem da splash |
 | `notification-icon.png` | Android, PNG transparente e monocromático branco |

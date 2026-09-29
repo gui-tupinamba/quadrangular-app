@@ -5,7 +5,8 @@ const brands = {
   default: {
     ...defaultBrandConfig,
     assets: {
-      logo: require("./brands/default/assets/logo.jpg"),
+      // Uma única imagem identifica o app na tela de login e no launcher.
+      logo: require("./brands/default/assets/app-icon.png"),
       logoHorizontal: require("./brands/default/assets/logo-horizontal.jpg"),
       logoWhite: require("./brands/default/assets/logo-white.jpg"),
       appIcon: require("./brands/default/assets/app-icon.png"),
