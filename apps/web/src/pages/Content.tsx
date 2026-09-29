@@ -13,6 +13,7 @@ import {
   X,
 } from "lucide-react";
 import { api, apiBlob, apiForm, ApiError } from "../api";
+import { brand } from "../branding";
 import { useSession } from "../session";
 import {
   Badge,
@@ -119,7 +120,7 @@ export function ContentPage({ kind }: { kind: Kind }) {
               setPage(1);
             }}
           >
-            Comunidade
+            {brand.shortName}
           </button>
           <button
             aria-pressed={administrative}

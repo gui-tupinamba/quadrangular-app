@@ -25,6 +25,7 @@ import {
 } from "@/components";
 
 import { PostManagementActions } from "@/PostManagementActions";
+import { brand } from "@/branding";
 import { colors } from "@/theme";
 import { useResource } from "@/useResource";
 
@@ -274,7 +275,7 @@ export default function Feed() {
             />
 
             <Text style={[styles.tabText, !manage && styles.tabTextActive]}>
-              Comunidade
+              {brand.shortName}
             </Text>
           </Pressable>
 
@@ -935,7 +936,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     left: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.35)",
+    backgroundColor: colors.overlay,
   },
 
   modalCard: {

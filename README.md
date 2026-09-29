@@ -5,6 +5,10 @@ do banco, autenticação e autorização estão implementados. A API já oferece
 protegidas, cadastro, perfis, ministérios, participantes, líderes, publicações, comentários, eventos e agenda.
 A interface Web funcional está em **https://guitupinamba.dev/** e a API em
 **https://api.guitupinamba.dev/api**. Entre com o ADMIN criado anteriormente.
+
+O projeto possui identidade visual white-label centralizada para Web e Mobile.
+Consulte [BRANDING.md](BRANDING.md) para trocar cores, nomes, logos, ícones,
+splash e favicon ou criar uma nova marca.
 O aplicativo mobile da fase 13 está disponível em `apps/mobile` para Android e iOS.
 
 ## Estado atual

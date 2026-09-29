@@ -1,12 +1,25 @@
+import { brand } from "./branding";
+
+const brandColors = brand.colors;
+
 export const colors = {
-  green: "#175548",
-  greenDark: "#0e3d34",
-  greenSoft: "#e8f1ed",
-  cream: "#f6f4ed",
-  gold: "#d5a95c",
-  ink: "#15342d",
-  muted: "#667a72",
-  border: "#d8e2dd",
-  white: "#ffffff",
-  danger: "#a63f3f",
+  ...brandColors,
+  green: brandColors.primary,
+  greenDark: brandColors.primaryDark,
+  greenSoft: brandColors.primarySoft,
+  cream: brandColors.background,
+  gold: brandColors.accent,
+  ink: brandColors.textPrimary,
+  muted: brandColors.textSecondary,
+  white: brandColors.onPrimary,
+  danger: brandColors.error,
 };
+
+export const typography = brand.typography;
+
+export const radius = {
+  small: 4,
+  medium: 8,
+  large: 16,
+  round: 999,
+} as const;

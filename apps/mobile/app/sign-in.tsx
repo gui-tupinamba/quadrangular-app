@@ -17,6 +17,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 
 import { ErrorState } from "@/components";
+import { brand } from "@/branding";
 import { useSession } from "@/session";
 import { colors } from "@/theme";
 
@@ -78,16 +79,16 @@ export default function SignIn() {
           <View style={styles.brand}>
             <View style={styles.logoContainer}>
               <Image
-                source={require("../assets/images/logo.jpg")}
+                source={brand.assets.logo}
                 style={styles.logo}
                 resizeMode="contain"
               />
             </View>
 
             <View>
-              <Text style={styles.brandName}>Comunidade</Text>
+              <Text style={styles.brandName}>{brand.name}</Text>
 
-              <Text style={styles.brandTag}>VIDA EM IGREJA</Text>
+              <Text style={styles.brandTag}>{brand.tagline}</Text>
             </View>
           </View>
 
@@ -129,7 +130,7 @@ export default function SignIn() {
               value={email}
               onChangeText={setEmail}
               placeholder="Seu melhor e-mail"
-              placeholderTextColor="#95a39f"
+              placeholderTextColor={colors.textDisabled}
               style={styles.input}
               returnKeyType="next"
             />
@@ -153,7 +154,7 @@ export default function SignIn() {
               value={password}
               onChangeText={setPassword}
               placeholder="Sua senha"
-              placeholderTextColor="#95a39f"
+              placeholderTextColor={colors.textDisabled}
               style={styles.input}
               returnKeyType="done"
               onSubmitEditing={submit}
@@ -272,7 +273,7 @@ const styles = StyleSheet.create({
     right: -145,
     top: -115,
 
-    backgroundColor: "rgba(23,85,72,0.045)",
+    backgroundColor: colors.primaryWash,
   },
 
   circleSmall: {
@@ -287,7 +288,7 @@ const styles = StyleSheet.create({
     top: 34,
 
     borderWidth: 1,
-    borderColor: "rgba(23,85,72,0.055)",
+    borderColor: colors.primaryWashStrong,
   },
 
   leafOne: {
@@ -301,7 +302,7 @@ const styles = StyleSheet.create({
     right: -16,
     top: 155,
 
-    backgroundColor: "rgba(23,85,72,0.055)",
+    backgroundColor: colors.primaryWashStrong,
 
     transform: [
       {
@@ -321,7 +322,7 @@ const styles = StyleSheet.create({
     right: 17,
     top: 199,
 
-    backgroundColor: "rgba(23,85,72,0.045)",
+    backgroundColor: colors.primaryWash,
 
     transform: [
       {
@@ -341,7 +342,7 @@ const styles = StyleSheet.create({
     right: -3,
     top: 240,
 
-    backgroundColor: "rgba(23,85,72,0.04)",
+    backgroundColor: colors.primaryWashSubtle,
 
     transform: [
       {
@@ -372,7 +373,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
 
-    shadowColor: "#000",
+    shadowColor: colors.shadow,
     shadowOffset: {
       width: 0,
       height: 5,
@@ -477,7 +478,7 @@ const styles = StyleSheet.create({
 
     marginBottom: 21,
 
-    shadowColor: "#000",
+    shadowColor: colors.shadow,
     shadowOffset: {
       width: 0,
       height: 2,

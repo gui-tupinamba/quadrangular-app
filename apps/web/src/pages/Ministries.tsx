@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Plus, HandHeart, Pencil, Users } from "lucide-react";
 import { api } from "../api";
+import { brand } from "../branding";
 import { useSession } from "../session";
 import {
   all,
@@ -58,7 +59,7 @@ export function MinistriesPage() {
               setPage(1);
             }}
           >
-            Comunidade
+            {brand.shortName}
           </button>
           <button
             className={administrative ? "active" : ""}

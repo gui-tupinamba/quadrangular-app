@@ -5,6 +5,7 @@ import * as Notifications from "expo-notifications";
 import * as SecureStore from "expo-secure-store";
 
 import { api } from "./api";
+import { brand } from "./branding";
 
 const PUSH_TOKEN_KEY = "igreja.mobile.expoPushToken";
 
@@ -31,7 +32,7 @@ async function configureAndroidNotificationChannel() {
 
   await Notifications.setNotificationChannelAsync("default", {
     name: "Notificações",
-    description: "Notificações da Comunidade",
+    description: `Notificações de ${brand.name}`,
     importance: Notifications.AndroidImportance.MAX,
     vibrationPattern: [0, 250, 250, 250],
   });

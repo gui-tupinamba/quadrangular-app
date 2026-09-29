@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { Church, ArrowRight, Eye, EyeOff, LogOut } from "lucide-react";
+import { ArrowRight, Eye, EyeOff } from "lucide-react";
 import { login, logout, refresh, subscribeSession } from "./api";
+import { brand } from "./branding";
 import type { User } from "./types";
 import Shell from "./Shell";
 
@@ -17,7 +18,7 @@ export default function App() {
   if (loading)
     return (
       <div className="boot" role="status">
-        <Church size={38} />
+        <img className="boot-logo" src={brand.assets.logo} alt="" />
         <p>Conectando sua comunidade…</p>
       </div>
     );
@@ -28,10 +29,10 @@ export function Brand() {
   return (
     <div className="brand">
       <span className="brand-mark">
-        <Church size={26} />
+        <img src={brand.assets.logo} alt="" />
       </span>
       <span>
-        Comunidade<small>VIDA EM IGREJA</small>
+        {brand.name}<small>{brand.tagline}</small>
       </span>
     </div>
   );

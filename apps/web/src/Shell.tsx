@@ -23,6 +23,7 @@ import {
   Bell,
 } from "lucide-react";
 import { Brand } from "./App";
+import { brand } from "./branding";
 import { logout } from "./api";
 import { SessionProvider, useSession } from "./session";
 import {
@@ -136,7 +137,7 @@ function Layout() {
             <Menu />
           </button>
           <span>
-            Comunidade <span className="slash">/</span>{" "}
+            {brand.shortName} <span className="slash">/</span>{" "}
             {(entries.find((e) => e[0] === location.pathname)?.[1] as string) ||
               "Início"}
           </span>
@@ -181,7 +182,7 @@ function Layout() {
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
-        <footer className="app-footer">Comunidade · Vida em igreja</footer>
+        <footer className="app-footer">{brand.name} · {brand.tagline}</footer>
       </div>
     </div>
   );

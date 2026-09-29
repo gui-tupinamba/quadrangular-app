@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     marginBottom: 25,
   },
   heroEyebrow: {
-    color: "#bcd6cc",
+    color: colors.heroText,
     fontWeight: "800",
     fontSize: 10,
     letterSpacing: 1.4,

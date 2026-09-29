@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   state: { minHeight: 150, alignItems: "center", justifyContent: "center", gap: 12, padding: 20 },
   muted: { color: colors.muted, textAlign: "center", lineHeight: 21 },
   emptyTitle: { color: colors.ink, fontSize: 18, fontWeight: "800" },
-  error: { minHeight: 100, backgroundColor: "#fff1f1", borderRadius: 14 },
+  error: { minHeight: 100, backgroundColor: colors.errorSurface, borderRadius: 14 },
   errorText: { color: colors.danger, textAlign: "center", lineHeight: 21 },
   smallButton: { backgroundColor: colors.green, borderRadius: 10, minHeight: 42, justifyContent: "center", paddingHorizontal: 15 },
   smallButtonText: { color: colors.white, fontWeight: "800" },
