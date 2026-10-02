@@ -8,9 +8,9 @@ import { typography } from "./typography";
 
 export const defaultBrand = {
   id: "default",
-  name: "Comunidade",
-  shortName: "Comunidade",
-  tagline: "VIDA EM IGREJA",
+  name: "Koinonia",
+  shortName: "Koinonia",
+  tagline: "A PLATAFORMA QUE CONECTA SUA IGREJA",
   colors,
   typography,
   assets: {
