@@ -1,39 +1,13 @@
 import { useEffect, useState } from "react";
 import { ContentImagePicker } from "../ContentImagePicker";
 import { useSearchParams } from "react-router-dom";
-import {
-  Plus,
-  MessageCircle,
-  CalendarDays,
-  LockKeyhole,
-  Globe,
-  Pencil,
-  Archive,
-  Check,
-  X,
-} from "lucide-react";
+import {Plus,MessageCircle,CalendarDays,LockKeyhole,Globe,Pencil,
+  Archive,Check,X,} from "lucide-react";
 import { api, apiBlob, apiForm, ApiError } from "../api";
 import { brand } from "../branding";
 import { useSession } from "../session";
-import {
-  Badge,
-  Choice,
-  Confirm,
-  date,
-  Empty,
-  ErrorBox,
-  Form,
-  Heading,
-  instant,
-  Loading,
-  localDate,
-  Modal,
-  nullable,
-  Pager,
-  query,
-  text,
-  useData,
-} from "../ui";
+import {Badge,Choice,Confirm,date,Empty,ErrorBox,Form,Heading,instant,
+  Loading,localDate,Modal,nullable,Pager,query,text,useData} from "../ui";
 import type { Comment, Content, ContentImage, Page } from "../types";
 
 type Kind = "posts" | "events" | "schedules";
@@ -59,8 +33,7 @@ const configs = {
 };
 export function ContentPage({ kind }: { kind: Kind }) {
   const { permissions, ministries, canManage } = useSession();
-  const canCreate =
-    permissions.manage_ministries || permissions.led_ministries.length > 0;
+  const canCreate = permissions.manage_ministries || permissions.led_ministries.length > 0;
   const config = configs[kind];
   const [params, setParams] = useSearchParams();
   const [manage, setManage] = useState(false);
@@ -77,7 +50,16 @@ export function ContentPage({ kind }: { kind: Kind }) {
   const [selected, setSelected] = useState<number | null>(null);
   const [error, setError] = useState<unknown>();
   const administrative = manage && canCreate;
-  const path = `${administrative ? "/admin" : ""}/${kind}?${query({ ...filters, status: administrative ? filters.status : kind === "posts" ? "" : filters.status, from: filters.from ? instant(filters.from)! : "", to: filters.to ? instant(filters.to)! : "", page, limit: 12 })}`;
+  const path = `${administrative ? "/admin" : ""}/${kind}?${
+    query({
+      ...filters, 
+      status: administrative ? filters.status : kind === "posts" ? "" : filters.status, 
+      from: filters.from ? instant(filters.from)! : "", 
+      to: filters.to ? instant(filters.to)! : "", 
+      page, 
+      limit: 12 
+      })
+  }`;
   // Posts do not accept temporal filters.
   const list = useData<Page<Content>>(
     kind === "posts" ? path.replace(/&?(?:from|to)=[^&]*/g, "") : path,
@@ -180,13 +162,10 @@ export function ContentPage({ kind }: { kind: Kind }) {
             >
               <option value="">Todos</option>
               {administrative && <option value="DRAFT">Rascunhos</option>}
-
               {administrative && kind === "posts" && (
                 <option value="PENDING_REVIEW">Aguardando revisão</option>
               )}
-
               <option value="PUBLISHED">Publicados</option>
-
               {kind !== "posts" && (
                 <option value="CANCELLED">Cancelados</option>
               )}
@@ -367,40 +346,7 @@ export function ContentEditor({
       onClose={onClose}
     >
       <Form
-        // onClose={onClose}
-        // afterSave={onSaved}
-        // onSave={async (f) => {
-        //   const ministry = text(f, "ministry_id");
-        //   const body = {
-        //     title: text(f, "title"),
-        //     ministry_id: ministry ? Number(ministry) : null,
-        //     visibility: text(f, "visibility"),
-        //     ...(kind === "posts"
-        //       ? {
-        //           content: text(f, "content"),
-        //           comments_enabled: f.get("comments_enabled") === "on",
-        //         }
-        //       : {
-        //           description: nullable(f, "description"),
-        //           starts_at: instant(text(f, "starts_at")),
-        //           ends_at: instant(text(f, "ends_at")),
-        //           ...(kind === "events"
-        //             ? {
-        //                 location: nullable(f, "location"),
-        //                 address: nullable(f, "address"),
-        //               }
-        //             : {}),
-        //         }),
-        //   };
-        //   await api(
-        //     `/${kind}${item ? `/${item.id}` : ""}`,
-        //     item ? "PATCH" : "POST",
-        //     body,
-        //   );
-        // }}
-
         onClose={onClose}
-
         submit={
           isNewPost
             ? canPublishPost
@@ -408,9 +354,7 @@ export function ContentEditor({
               : "Enviar para revisão"
             : "Salvar"
         }
-
         secondarySubmit={isNewPost ? "Salvar rascunho" : undefined}
-
         onSecondarySave={
           isNewPost
             ? async (f) => {
@@ -418,7 +362,6 @@ export function ContentEditor({
               }
             : undefined
         }
-
         onSave={async (f) => {
           const result = await saveContentWithImages(kind, item, f, imageFiles);
 
@@ -430,7 +373,6 @@ export function ContentEditor({
             await api(`/posts/${post.id}/${action}`, "POST", {});
           }
         }}
-
         afterSave={(action) => {
           onSaved(!item && kind === "posts" && action === "primary");
         }}
@@ -474,18 +416,15 @@ export function ContentEditor({
             defaultValue={item?.content || item?.description || ""}
           />
         </label>
-
         {(kind === "posts" || kind === "events") && !item && (
           <div className="content-images-field">
             <div className="content-images-title">
               <strong>Imagens</strong>
               <span>Opcional</span>
             </div>
-
             <ContentImagePicker value={imageFiles} onChange={setImageFiles} />
           </div>
         )}
-
         {kind === "posts" ? (
           <label className="checkbox">
             <input
@@ -544,7 +483,6 @@ export function ContentEditor({
             )}
           </>
         )}
-
         {!item && kind === "posts" && (
           <p className="hint">
             {canPublishPost
@@ -552,7 +490,6 @@ export function ContentEditor({
               : "Ao enviar, a publicação ficará aguardando revisão de um Pastor ou Administrador."}
           </p>
         )}
-
       </Form>
     </Modal>
   );
