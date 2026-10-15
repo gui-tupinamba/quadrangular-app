@@ -8,8 +8,8 @@ import { typography } from "./typography";
 
 export const defaultBrand = {
   id: "default",
-  name: "Koinonia",
-  shortName: "Koinonia",
+  name: "Fieis Conectados",
+  shortName: "Fieis Conectados",
   tagline: "A PLATAFORMA QUE CONECTA SUA IGREJA",
   colors,
   typography,

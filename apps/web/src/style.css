@@ -165,12 +165,10 @@ a {
 }
 
 .brand-mark {
-    border: 1px solid var(--brand-tone-hex-ffffff60);
-    border-radius: 12px;
-
-    width: 49px;
-    height: 49px;
-
+    /* border: 1px solid var(--brand-tone-hex-ffffff60); */
+    /* border-radius: 12px; */
+    width: 98px;
+    height: 98px;
     display: grid;
     place-items: center;
 }

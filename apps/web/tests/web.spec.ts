@@ -111,7 +111,9 @@ test("ADMIN cria e publica conteúdo e evento pela interface", async ({
   await page
     .getByLabel("Conteúdo", { exact: true })
     .fill("Conteúdo criado pela interface real.");
-  await page.getByRole("button", { name: "Salvar rascunho", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Salvar rascunho", exact: true })
+    .click();
   await page.getByRole("button", { name: title, exact: true }).click();
   await page.getByRole("button", { name: "Publicar", exact: true }).click();
   await page.getByRole("button", { name: "Confirmar", exact: true }).click();
@@ -362,6 +364,9 @@ test("perfil persiste alterações e troca de senha encerra a sessão", async ({
   await page.getByLabel("Senha", { exact: true }).fill(nextPassword);
   await page.getByRole("button", { name: "Entrar na comunidade" }).click();
   await expect(
-    page.getByRole("heading", { name: "Perfil atualizado na Web", exact: true }),
+    page.getByRole("heading", {
+      name: "Perfil atualizado na Web",
+      exact: true,
+    }),
   ).toBeVisible();
 });

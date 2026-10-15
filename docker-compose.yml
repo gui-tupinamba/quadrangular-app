@@ -16,6 +16,8 @@ services:
         max-file: "3"
 
   postgres:
+    ports:
+      - "127.0.0.1:5433:5432"
     image: postgres:17-bookworm
     restart: unless-stopped
     environment:
