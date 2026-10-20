@@ -235,7 +235,7 @@ final class UserManagementHttpTest extends WebTestCase
     {
         yield 'required name cannot be null' => [['name' => null]];
         yield 'phone is never an object' => [['phone' => ['number' => 'sensitive-input']]];
-        yield 'password minimum is twelve bytes' => [['password' => 'elevenbytes']];
+        yield 'password minimum is six bytes' => [['password' => 'abcde']];
         yield 'birth date cannot roll into another month' => [['birth_date' => '2001-02-29']];
         yield 'birth date cannot be in the future' => [['birth_date' => '2999-01-01']];
         yield 'role cannot be null' => [['role' => null]];

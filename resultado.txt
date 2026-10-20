@@ -1,0 +1,34 @@
+ Container quadrangular-postgres-test-1 Running 
+ Container quadrangular-postgres-test-1 Waiting 
+ Container quadrangular-postgres-test-1 Healthy 
+ Container quadrangular-api-test-run-a9d2cad16ffd Creating 
+ Container quadrangular-api-test-run-a9d2cad16ffd Created 
+
+ [OK] Already at the latest version ("DoctrineMigrations\Version20260925190000")
+
+
+Mapping
+-------
+
+ [OK] The mapping files are correct.                                            
+
+Database
+--------
+
+ [OK] The database schema is in sync with the mapping files.                    
+
+
+ // Warming up the cache for the test environment with debug false              
+
+ [OK] Cache for the "test" environment (debug=false) was successfully warmed.   
+
+PHPUnit 11.5.56 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.4.26
+Configuration: /var/www/api/phpunit.xml.dist
+
+............................FF.................................  63 / 449 ( 14%)
+............................................................... 126 / 449 ( 28%)
+.......F....F..........{"message":"API request failed.","context":{"status":500,"exception_type":"Doctrine\\DBAL\\Exception\\DriverException"},"level":400,"level_name":"ERROR","channel":"app","datetime":"2026-10-20T01:19:10.187750+00:00","extra":{}}
+.F...................................... 189 / 449 ( 42%)
+........................................got 3 SIGTERM/SIGINTs, forcefully exiting

@@ -11,7 +11,7 @@ if [ "${RUN_DATABASE_TESTS:-0}" = '1' ]; then
         exit 1
     fi
     case "${DATABASE_URL:-}" in
-        postgresql://*@postgres-test:5432/igreja_test\?*) ;;
+        postgresql://*@postgres-test:5432/*_test\?*) ;;
         *)
             echo 'Integration tests require the isolated postgres-test database.' >&2
             exit 1

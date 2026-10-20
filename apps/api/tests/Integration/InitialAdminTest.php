@@ -107,7 +107,7 @@ final class InitialAdminTest extends KernelTestCase
     {
         $email = 'retry-'.bin2hex(random_bytes(8)).'@example.test';
         $password = '  '.bin2hex(random_bytes(10)).'  ';
-        $tooShort = 'curta#123';
+        $tooShort = 'abc#1';
         $tester = new CommandTester(self::getContainer()->get(CreateAdminCommand::class));
         $tester->setInputs(['   ', 'Administrador', 'email-invalido', $email, $tooShort, $password, $password]);
         try {
@@ -115,7 +115,7 @@ final class InitialAdminTest extends KernelTestCase
             $output = $tester->getDisplay();
             self::assertStringContainsString('Informe um nome', $output);
             self::assertStringContainsString('Informe um email válido', $output);
-            self::assertStringContainsString('pelo menos 12 bytes', $output);
+            self::assertStringContainsString('pelo menos 6 bytes', $output);
             self::assertStringNotContainsString($password, $output);
             self::assertStringNotContainsString($tooShort, $output);
             $hash = $this->connection->fetchOne('SELECT password_hash FROM users WHERE email_normalized = ?', [$email]);
@@ -133,10 +133,10 @@ final class InitialAdminTest extends KernelTestCase
     public function testThreeInvalidPasswordsExplainTheReasonAndCreateNoAccount(): void
     {
         $tester = new CommandTester(self::getContainer()->get(CreateAdminCommand::class));
-        $tester->setInputs(['Administrador', 'rejected@example.test', 'curta#123', 'curta#123', 'curta#123']);
+        $tester->setInputs(['Administrador', 'rejected@example.test', 'abc#1', 'abc#1', 'abc#1']);
         self::assertSame(Command::FAILURE, $tester->execute([], ['interactive' => true]));
-        self::assertStringContainsString('pelo menos 12 bytes', $tester->getDisplay());
-        self::assertStringNotContainsString('curta#123', $tester->getDisplay());
+        self::assertStringContainsString('pelo menos 6 bytes', $tester->getDisplay());
+        self::assertStringNotContainsString('abc#1', $tester->getDisplay());
         self::assertSame(0, (int) $this->connection->fetchOne("SELECT count(*) FROM users WHERE email_normalized = 'rejected@example.test'"));
     }
 }

@@ -71,8 +71,8 @@ final class AdminCreationInputTest extends TestCase
         yield 'missing password' => ['validatePassword', null, 'password_invalid', 'senha'];
         yield 'whitespace password' => ['validatePassword', str_repeat(' ', 20), 'password_invalid', 'apenas espaços'];
         yield 'NUL in password' => ['validatePassword', "private-password\0suffix", 'password_invalid', 'nulos'];
-        yield '11 ASCII bytes' => ['validatePassword', str_repeat('a', 11), 'password_short', '12 bytes'];
-        yield '5 Unicode characters are 10 bytes' => ['validatePassword', str_repeat('ç', 5), 'password_short', '12 bytes'];
+        yield '5 ASCII bytes' => ['validatePassword', str_repeat('a', 5), 'password_short', '6 bytes'];
+        yield '2 Unicode characters are 4 bytes' => ['validatePassword', str_repeat('ç', 2), 'password_short', '6 bytes'];
         yield '73 ASCII bytes' => ['validatePassword', str_repeat('a', 73), 'password_long', '72 bytes'];
         yield '37 Unicode characters are 74 bytes' => ['validatePassword', str_repeat('ç', 37), 'password_long', '72 bytes'];
     }
