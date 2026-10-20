@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  api:
+    name: API (testes)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Gerar .env temporário só para o CI
+        run: |
+          cat > .env <<EOF
+          COMPOSE_PROJECT_NAME=ci
+          APP_ENV=test
+          APP_SECRET=$(openssl rand -hex 32)
+          POSTGRES_PASSWORD=$(openssl rand -hex 32)
+          APP_DATABASE_PASSWORD=$(openssl rand -hex 32)
+          EOF
+          # o compose declara estes secrets; o api-test não usa, mas evita erro de arquivo ausente
+          mkdir -p .secrets
+          touch .secrets/jwt-private.pem .secrets/jwt-public.pem
+
+      - name: Rodar testes da API
+        run: docker compose --profile tools run --rm api-test
+
+      - name: Limpar containers
+        if: always()
+        run: docker compose --profile tools down -v
+
+  web:
+    name: Web (build)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+
+      - run: npm ci --no-audit --no-fund
+
+      - run: npm run build
+        env:
+          VITE_API_URL: https://api.guitupinamba.dev/api
