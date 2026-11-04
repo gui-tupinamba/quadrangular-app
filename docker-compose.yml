@@ -141,6 +141,7 @@ services:
         condition: service_healthy
     networks:
       - database
+
     security_opt:
       - no-new-privileges:true
     logging: *logging
@@ -217,9 +218,24 @@ volumes:
 
 networks:
   edge:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+        - subnet: 2001:db8:2::/64
   application:
     internal: true
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16
+        - subnet: 2001:db8:3::/64
   database:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.23.0.0/16
+        - subnet: 2001:db8:1::/64
     internal: true
   test_database:
     internal: true
