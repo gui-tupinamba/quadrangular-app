@@ -4,8 +4,16 @@ import { login, logout, refresh, subscribeSession } from "./api";
 import { brand } from "./branding";
 import type { User } from "./types";
 import Shell from "./Shell";
+import { PublicInformation } from "./pages/PublicInformation";
 
 export default function App() {
+  const publicPath = window.location.pathname;
+  if (publicPath === "/privacidade") return <PublicInformation />;
+  if (publicPath === "/excluir-conta") return <PublicInformation deletion />;
+  return <AuthenticatedApp />;
+}
+
+function AuthenticatedApp() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -127,6 +135,10 @@ function Login() {
             <br />
             Fale com a administração da sua igreja.
           </div>
+          <nav className="login-public-links" aria-label="Informações públicas">
+            <a href="/privacidade">Política de privacidade</a>
+            <a href="/excluir-conta">Solicitar exclusão de conta</a>
+          </nav>
         </form>
         <small className="login-footer">Um espaço de cuidado e conexão.</small>
       </section>

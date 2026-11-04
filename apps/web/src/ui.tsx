@@ -30,6 +30,11 @@ export const labels: Record<string, string> = {
   USER: "Pessoa",
   VISIBLE: "Visível",
   HIDDEN: "Oculto",
+  PENDING: "Pendente",
+  UNDER_REVIEW: "Em análise",
+  APPROVED: "Aprovada",
+  REJECTED: "Rejeitada",
+  COMPLETED: "Concluída",
 };
 
 export const date = (value?: string | null) =>

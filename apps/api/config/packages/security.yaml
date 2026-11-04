@@ -24,6 +24,8 @@ security:
 
     - { path: ^/api/auth/(mobile/)?(login|refresh|logout)$, roles: PUBLIC_ACCESS, methods: [POST] }
 
+    - { path: ^/api/account-deletion-requests$, roles: PUBLIC_ACCESS, methods: [POST] }
+
     - { path: ^/api(?:/|$), roles: IS_AUTHENTICATED_FULLY }
 
 when@test:

@@ -3624,3 +3624,46 @@ dialog:has(.crop-editor) .dialog-head {
 .notification-card small { color:var(--green); }
 .notification-dot { width:10px; height:10px; border-radius:50%; background:var(--gold); flex:0 0 auto; }
 @media(max-width:640px){.notification-composer .form-grid{grid-template-columns:1fr}.notification-composer .wide{grid-column:auto}}
+
+.login-public-links { display:flex; justify-content:center; flex-wrap:wrap; gap:8px 18px; margin-top:18px; font-size:.82rem; }
+.login-public-links a,.public-page a { color:var(--green); text-decoration:underline; text-underline-offset:3px; }
+.public-page { min-height:100vh; background:var(--brand-background); color:var(--brand-textPrimary); padding:24px clamp(18px,5vw,72px); }
+.public-header,.public-footer { max-width:940px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; gap:18px; }
+.public-header { padding:8px 0 30px; border-bottom:1px solid var(--border); }
+.public-footer { border-top:1px solid var(--border); padding:22px 0; justify-content:center; flex-wrap:wrap; gap:12px 28px; font-size:.9rem; }
+.public-document { max-width:760px; min-height:calc(100vh - 185px); margin:36px auto; padding:clamp(22px,5vw,54px); background:var(--paper); border:1px solid var(--border); border-radius:18px; box-shadow:0 16px 50px #1539270d; }
+.public-back { display:inline-flex; align-items:center; gap:8px; margin-bottom:32px; text-decoration:none!important; }
+.public-eyebrow { display:block; color:var(--green); font-size:.76rem; font-weight:800; letter-spacing:.12em; }
+.public-document h1 { margin:8px 0 14px; font-size:clamp(2rem,5vw,3.1rem); line-height:1.12; color:var(--brand-textStrong); }
+.public-document h2 { margin:34px 0 10px; color:var(--brand-textStrong); font-size:1.26rem; }
+.public-document p,.public-document li { line-height:1.75; color:var(--brand-textSecondary); }
+.public-document ul { padding-left:24px; }
+.public-lead { font-size:1.08rem; }
+.public-updated { margin-top:36px; padding-top:18px; border-top:1px solid var(--border); font-size:.9rem; }
+.public-callout { display:flex; gap:12px; align-items:flex-start; margin:24px 0; padding:15px 17px; color:var(--green); background:var(--brand-primarySoft); border-radius:12px; }
+.public-callout p { margin:0; }
+.public-form { display:grid; gap:17px; margin-top:26px; }
+.public-form label,.reject-form label { display:grid; gap:7px; font-weight:700; }
+.public-form label span { color:var(--muted); font-weight:400; }
+.public-form input,.public-form textarea,.reject-form textarea { width:100%; min-height:48px; border:1px solid var(--border); border-radius:9px; padding:11px 13px; color:var(--brand-textPrimary); background:var(--paper); }
+.public-form textarea,.reject-form textarea { resize:vertical; }
+.public-form .public-check,.public-check { display:flex; align-items:flex-start; gap:11px; font-weight:500; line-height:1.5; }
+.public-check input { width:20px; height:20px; min-height:20px; flex:0 0 auto; accent-color:var(--green); }
+.public-honeypot { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+.public-form-note,.public-contact { font-size:.9rem; }
+.public-receipt { margin-top:28px; padding:24px; border:1px solid var(--border); border-radius:14px; text-align:center; }
+.public-receipt > svg { color:var(--green); }
+.public-receipt code,.deletion-review code { display:inline-block; overflow-wrap:anywhere; padding:7px 9px; border-radius:7px; background:var(--brand-primarySoft); }
+.public-receipt button { margin-top:16px; }
+.public-contact { margin-top:28px; }
+.deletion-review { max-width:720px; max-height:90vh; overflow:auto; }
+.request-facts { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; margin:18px 0; }
+.request-facts div { min-width:0; }
+.request-facts dt { color:var(--muted); font-size:.82rem; font-weight:700; }
+.request-facts dd { margin:4px 0 0; overflow-wrap:anywhere; }
+.request-extra { grid-column:1/-1; white-space:pre-wrap; }
+.request-privacy-note { padding:12px; border-radius:9px; background:var(--brand-primarySoft); font-size:.9rem; }
+.deletion-review > .public-check { margin:16px 0; }
+.reject-form { display:grid; gap:10px; margin-top:24px; padding-top:20px; border-top:1px solid var(--border); }
+.reject-form button { justify-self:start; }
+@media(max-width:600px) { .public-page { padding:16px; } .public-header { align-items:flex-start; flex-direction:column; padding-bottom:20px; } .public-document { margin:18px auto; padding:22px 18px; } .request-facts { grid-template-columns:1fr; } }

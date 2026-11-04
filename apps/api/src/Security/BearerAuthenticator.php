@@ -25,6 +25,7 @@ final class BearerAuthenticator extends AbstractAuthenticator implements Authent
         'api_health', 'api_ready',
         'api_auth_login', 'api_auth_refresh', 'api_auth_logout',
         'api_auth_mobile_login', 'api_auth_mobile_refresh', 'api_auth_mobile_logout',
+        'api_account_deletion_request',
     ];
 
     public function __construct(

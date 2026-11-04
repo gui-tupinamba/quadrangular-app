@@ -162,6 +162,27 @@ export async function api<T>(
   }
 }
 
+export async function submitPublicAccountDeletionRequest(body: {
+  name: string;
+  email: string;
+  confirm: boolean;
+  additional_information?: string;
+  website?: string;
+}): Promise<{ message: string; reference: string }> {
+  let response: Response;
+  try {
+    response = await fetch(`${API_URL}/account-deletion-requests`, {
+      method: "POST",
+      credentials: "omit",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+  } catch {
+    throw new ApiError(0, "Sem conexão com o servidor. Tente novamente.");
+  }
+  return decode(response);
+}
+
 export async function apiBlob(path: string): Promise<Blob> {
   const existingRequest = imageRequests.get(path);
 

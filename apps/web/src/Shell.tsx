@@ -21,6 +21,7 @@ import {
   Plus,
   ArrowUpRight,
   Bell,
+  ShieldCheck,
 } from "lucide-react";
 import { Brand } from "./App";
 import { brand } from "./branding";
@@ -42,6 +43,7 @@ import { MinistriesPage } from "./pages/Ministries";
 import { UsersPage, ProfilePage } from "./pages/Users";
 import { CalendarPage } from "./pages/Calendar";
 import { NotificationsPage } from "./pages/Notifications";
+import { AccountDeletionRequestsPage } from "./pages/AccountDeletionRequests";
 
 export default function Shell({ user }: { user: User }) {
   return (
@@ -67,6 +69,7 @@ function Layout() {
     ["/agenda", "Agenda", CalendarCheck],
     ["/avisos", "Avisos", Bell],
     ...(permissions.manage_users ? [["/pessoas", "Pessoas", Users]] : []),
+    ...(permissions.manage_users ? [["/solicitacoes-exclusao", "Exclusões", ShieldCheck]] : []),
     ["/perfil", "Meu perfil", UserRound],
   ] as const;
   return (
@@ -179,10 +182,13 @@ function Layout() {
               }
             />
             <Route path="/perfil" element={<ProfilePage />} />
+            <Route path="/solicitacoes-exclusao" element={<AccountDeletionRequestsPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
-        <footer className="app-footer">{brand.name} · {brand.tagline}</footer>
+        <footer className="app-footer">
+          {brand.name} · {brand.tagline} · <a href="/privacidade">Privacidade</a> · <a href="/excluir-conta">Exclusão de conta</a>
+        </footer>
       </div>
     </div>
   );

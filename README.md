@@ -186,7 +186,7 @@ docker compose exec php php bin/console doctrine:migrations:migrate --no-interac
 docker compose exec php php bin/console doctrine:schema:validate
 ```
 
-O projeto possui três migrations. O comando de migrate executa apenas as versões
+O projeto possui onze migrations. O comando de migrate executa apenas as versões
 pendentes; o estado de implantação verificado está em [validation.md](docs/validation.md).
 
 Verifique o caminho HTTP completo:
@@ -362,6 +362,9 @@ Fases 2–15 implementadas: infraestrutura, domínio, autenticação, autorizaç
 usuários, ministérios, conteúdo, agenda, Web, aplicativo mobile, notificações e
 acesso externo seguro. A fase 14 inclui caixa de entrada Web/mobile, preferências,
 dispositivos por sessão e fila Expo; configuração em [notifications.md](docs/notifications.md).
+Fase 16 implementa solicitações de exclusão, anonimização transacional, painel
+administrativo, páginas públicas e contrato da API. Escopo, rotas e pendências de publicação em
+[account-deletion.md](docs/account-deletion.md).
 A criação inicial é
 controlada por `docker compose exec php php bin/console app:admin:create`, com senha
 oculta e sem credenciais padrão. O primeiro ADMIN local foi criado pelo usuário.
@@ -374,6 +377,9 @@ Web (fase 12): [instruções](docs/web.md). Mobile (fase 13):
 [instruções](docs/mobile.md). A exposição externa está ativa por Cloudflare Tunnel
 nos hosts `guitupinamba.dev` e `api.guitupinamba.dev`, com HTTPS e origens restritas.
 
-API atualizada em 28/09/2026; **449 testes e 3.532 verificações** aprovados na suíte
-completa com PostgreSQL isolado. A migration mais recente é
-`Version20260925190000`.
+Na atualização da fase 16 em 04/11/2026, `Version20261104120000` é a migration
+mais recente e foi aplicada ao banco de teste isolado. Os testes unitários e os
+testes focados da funcionalidade passaram; a suíte de integração completa teve
+falhas ambientais/baseline e não está integralmente verde. Resultados e pendências
+atuais estão em [validation.md](docs/validation.md). A migration ainda precisa
+ser aplicada no ambiente de implantação.

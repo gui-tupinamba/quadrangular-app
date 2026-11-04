@@ -59,6 +59,8 @@ final readonly class CorsSubscriber implements EventSubscriberInterface
             preg_match('#^/api/admin/users/[1-9][0-9]*/access$#D', $path) === 1 => ['PATCH'],
             preg_match('#^/api/admin/users/[1-9][0-9]*$#D', $path) === 1, $path === '/api/profile' => ['GET', 'PATCH'],
             preg_match('#^/api/admin/users/[1-9][0-9]*/password$#D', $path) === 1, $path === '/api/profile/password' => ['POST'],
+            preg_match('#^/api/admin/account-deletion-requests(?:/[a-f0-9]{32}(?:/(review|verify-identity|approve|reject|complete))?)?$#D', $path) === 1 => ['GET', 'POST'],
+            $path === '/api/account-deletion-requests' => ['POST'],
             default => self::METHODS,
         };
         $headers = array_filter(array_map('trim', explode(',', strtolower($request->headers->get('Access-Control-Request-Headers', '')))));
