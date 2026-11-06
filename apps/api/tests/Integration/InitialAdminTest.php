@@ -9,6 +9,7 @@ use App\Auth\Exception\AdminCreationException;
 use App\Command\CreateAdminCommand;
 use App\Entity\User;
 use App\Enum\UserRole;
+use App\Tests\Support\ScriptedQuestionHelper;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -88,8 +89,11 @@ final class InitialAdminTest extends KernelTestCase
     {
         $email = 'command-'.bin2hex(random_bytes(8)).'@example.test';
         $password = 'test-only-'.bin2hex(random_bytes(10));
-        $tester = new CommandTester(self::getContainer()->get(CreateAdminCommand::class));
-        $tester->setInputs(['Administrador de teste', $email, $password, $password]);
+        $command = new CreateAdminCommand(
+            self::getContainer()->get(InitialAdminCreator::class),
+            new ScriptedQuestionHelper(['Administrador de teste', $email, $password, $password]),
+        );
+        $tester = new CommandTester($command);
         try {
             $status = $tester->execute([], ['interactive' => true]);
             self::assertSame(Command::SUCCESS, $status);
@@ -108,8 +112,11 @@ final class InitialAdminTest extends KernelTestCase
         $email = 'retry-'.bin2hex(random_bytes(8)).'@example.test';
         $password = '  '.bin2hex(random_bytes(10)).'  ';
         $tooShort = 'abc#1';
-        $tester = new CommandTester(self::getContainer()->get(CreateAdminCommand::class));
-        $tester->setInputs(['   ', 'Administrador', 'email-invalido', $email, $tooShort, $password, $password]);
+        $command = new CreateAdminCommand(
+            self::getContainer()->get(InitialAdminCreator::class),
+            new ScriptedQuestionHelper(['   ', 'Administrador', 'email-invalido', $email, $tooShort, $password, $password]),
+        );
+        $tester = new CommandTester($command);
         try {
             self::assertSame(Command::SUCCESS, $tester->execute([], ['interactive' => true]));
             $output = $tester->getDisplay();
@@ -132,8 +139,11 @@ final class InitialAdminTest extends KernelTestCase
 
     public function testThreeInvalidPasswordsExplainTheReasonAndCreateNoAccount(): void
     {
-        $tester = new CommandTester(self::getContainer()->get(CreateAdminCommand::class));
-        $tester->setInputs(['Administrador', 'rejected@example.test', 'abc#1', 'abc#1', 'abc#1']);
+        $command = new CreateAdminCommand(
+            self::getContainer()->get(InitialAdminCreator::class),
+            new ScriptedQuestionHelper(['Administrador', 'rejected@example.test', 'abc#1', 'abc#1', 'abc#1']),
+        );
+        $tester = new CommandTester($command);
         self::assertSame(Command::FAILURE, $tester->execute([], ['interactive' => true]));
         self::assertStringContainsString('pelo menos 6 bytes', $tester->getDisplay());
         self::assertStringNotContainsString('abc#1', $tester->getDisplay());

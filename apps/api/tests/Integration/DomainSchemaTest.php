@@ -127,7 +127,7 @@ final class DomainSchemaTest extends KernelTestCase
     }
 
     #[DataProvider('constraintViolations')]
-    public function testPostgresRejectsInvalidDataEvenWhenPhpGuardsAreBypassed(string $sql, string $sqlState): void
+    public function testPostgresRejectsInvalidDataEvenWhenPhpGuardsAreBypassed(string $sql, string|array $sqlState): void
     {
         $ids = $this->persistGraph();
 
@@ -143,11 +143,15 @@ final class DomainSchemaTest extends KernelTestCase
             self::fail('PostgreSQL accepted a domain constraint violation.');
         } catch (DriverException $exception) {
             // SQLSTATE is stable across PostgreSQL locales; error text is not.
-            self::assertSame($sqlState, $exception->getSQLState());
+            if (is_array($sqlState)) {
+                self::assertContains($exception->getSQLState(), $sqlState);
+            } else {
+                self::assertSame($sqlState, $exception->getSQLState());
+            }
         }
     }
 
-    /** @return iterable<string, array{string, string}> */
+    /** @return iterable<string, array{string, string|list<string>}> */
     public static function constraintViolations(): iterable
     {
         yield 'unique normalized email' => [
@@ -216,7 +220,9 @@ final class DomainSchemaTest extends KernelTestCase
         }
 
         foreach ([['users', 'user'], ['ministries', 'ministry'], ['posts', 'post']] as [$table, $id]) {
-            yield 'history restricts deletion of '.$table => ["DELETE FROM $table WHERE id = :$id", '23503'];
+            // PostgreSQL may report RESTRICT as either foreign_key_violation
+            // (23503) or restrict_violation (23001), depending on server version.
+            yield 'history restricts deletion of '.$table => ["DELETE FROM $table WHERE id = :$id", ['23503', '23001']];
         }
     }
 

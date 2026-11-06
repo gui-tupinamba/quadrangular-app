@@ -233,6 +233,9 @@ final class PostManagementHttpTest extends WebTestCase
 
     public function testProtectedImageUploadIsAuditedAndFollowsCurrentPostAccess(): void
     {
+        if (!extension_loaded('gd')) {
+            self::markTestSkipped('Image processing integration requires the GD extension.');
+        }
         $admin = $this->account('ADMIN');
         $member = $this->account('MEMBER');
         $outsider = $this->account('MEMBER');

@@ -8,6 +8,7 @@ use App\Auth\InitialAdminCreator;
 use App\Auth\Exception\AdminCreationException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
@@ -16,8 +17,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 #[AsCommand(name: 'app:admin:create', description: 'Cria o primeiro ADMIN por entrada interativa segura.')]
 final class CreateAdminCommand extends Command
 {
-    public function __construct(private readonly InitialAdminCreator $creator)
-    {
+    public function __construct(
+        private readonly InitialAdminCreator $creator,
+        private readonly ?QuestionHelper $questionHelper = null,
+    ) {
         parent::__construct();
     }
 
@@ -32,10 +35,10 @@ final class CreateAdminCommand extends Command
         try {
             $nameQuestion = new Question('Nome do administrador');
             $nameQuestion->setValidator(InitialAdminCreator::validateName(...))->setMaxAttempts(3);
-            $name = $io->askQuestion($nameQuestion);
+            $name = ($this->questionHelper ?? new QuestionHelper())->ask($input, $output, $nameQuestion);
             $emailQuestion = new Question('Email do administrador');
             $emailQuestion->setValidator(InitialAdminCreator::validateEmail(...))->setMaxAttempts(3);
-            $email = $io->askQuestion($emailQuestion);
+            $email = ($this->questionHelper ?? new QuestionHelper())->ask($input, $output, $emailQuestion);
             $question = new Question('Senha (mínimo 12 caracteres sem acentos; máximo 72 bytes)');
             // With trimming disabled Symfony keeps the Enter terminator; remove
             // only that terminator, preserving every space in the password.
@@ -45,11 +48,11 @@ final class CreateAdminCommand extends Command
             $question->setHidden(true)->setHiddenFallback(false)->setTrimmable(false);
             $question->setNormalizer($removeEnter);
             $question->setValidator(InitialAdminCreator::validatePassword(...))->setMaxAttempts(3);
-            $password = $io->askQuestion($question);
+            $password = ($this->questionHelper ?? new QuestionHelper())->ask($input, $output, $question);
             $confirmation = new Question('Confirme a senha');
             $confirmation->setHidden(true)->setHiddenFallback(false)->setTrimmable(false);
             $confirmation->setNormalizer($removeEnter);
-            $repeat = $io->askQuestion($confirmation);
+            $repeat = ($this->questionHelper ?? new QuestionHelper())->ask($input, $output, $confirmation);
             if (!is_string($name) || !is_string($email) || !is_string($password) || !is_string($repeat) || !hash_equals($password, $repeat)) {
                 $io->error('Dados incompletos ou confirmação de senha diferente.');
 

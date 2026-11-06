@@ -229,8 +229,14 @@ final class AdminUserHttpTest extends WebTestCase
         $second = $this->account('ADMIN');
         $results = $this->concurrent([$first, $second]);
         self::assertEqualsCanonicalizing(['ok', 'conflict'], $results);
-        self::assertSame(1, (int) $this->db->fetchOne("SELECT count(*) FROM users WHERE role = 'ADMIN' AND status = 'ACTIVE'"));
-        self::assertSame(1, (int) $this->db->fetchOne('SELECT count(*) FROM audit_logs'));
+        self::assertSame(1, (int) $this->db->fetchOne(
+            "SELECT count(*) FROM users WHERE id IN (?, ?) AND role = 'ADMIN' AND status = 'ACTIVE'",
+            [$first['id'], $second['id']],
+        ));
+        self::assertSame(1, (int) $this->db->fetchOne(
+            "SELECT count(*) FROM audit_logs WHERE action = 'user.access_changed' AND entity_type = 'users' AND entity_id IN (?, ?)",
+            [$first['id'], $second['id']],
+        ));
     }
 
     public function testSessionRevokedWhileWaitingCannotCompleteTheChange(): void

@@ -35,7 +35,11 @@ artifacts/
 *.sql.gz
 *.rar
 apps/mobile/android/app/igreja-release.keystore
-docs/
+# Keep the reviewed account-deletion docs in Git; other local docs stay ignored.
+docs/*
+!docs/account-deletion.md
+!docs/implementation-plan.md
+!docs/validation.md
 
 # Local tools and OS files
 .idea/
